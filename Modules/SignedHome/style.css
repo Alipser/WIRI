@@ -1,0 +1,59 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-container-modified{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.displayNone{
+    display: none !important;
+}
+
+#nav{
+    padding: 0 50px 0 50px;
+}
+
+#nav > div > a > img{
+    margin: 0 auto;
+}
+
+#nav > div > a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 18px;
+}
+
+@media (width < 995px)  {
+    #container-button-toggler{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 4px;
+        margin-top: 4px;
+    }
+
+
+    
+}
+
+@media (width < 610px)  {
+
+
+    #nav > div > div.d-flex.gap-1.align-items-start > button{
+    font-size: 0
+
+    }
+    #nav > div > div.d-flex.gap-1.align-items-start > button> i{
+        font-size: 25px
+    
+        }
+
+    
+}
