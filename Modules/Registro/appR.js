@@ -1,4 +1,7 @@
 //SELECTORES
+
+import { postUser, getMultipleUsers } from "../CRUD_USUARIOS/users.js";
+
 const formulario = document.querySelector(".form");
 const btnEnviar = document.querySelector(".btn-btn-primary");
 
@@ -39,11 +42,8 @@ btnEnviar.addEventListener("click", (event) => {
     } else if (registroUsuario.contrasena !== registroUsuario.contrasena2) {
       avisos("Contraseñas no coinciden", false);
     } else {
-
-      
-
       const registroUsuarioString = JSON.stringify(registroUsuario);
-      postUser(registroUsuarioString)
+      postUser(registroUsuarioString);
       console.log(registroUsuarioString);
 
       // localStorage.setItem("usuario", registroUsuarioString);
@@ -55,8 +55,6 @@ btnEnviar.addEventListener("click", (event) => {
   }
   formulario.reset();
 });
-
-
 
 function avisos(texto, condicion) {
   const alert = document.createElement(`div`);
@@ -97,13 +95,8 @@ function clearDiv() {
   }
 }
 
-async function postUser(user) {
-  const url ='http://localhost:3000/user'
-  const response = await fetch(url, {
-    method: "POST",
-    body: user,
-    headers: {"Content-type": "application/json; charset=UTF-8"}
-  })
-  console.log(response)
-  
-}
+let data2 = getMultipleUsers();
+
+data2.then((res) => {
+  console.log(res);
+});
