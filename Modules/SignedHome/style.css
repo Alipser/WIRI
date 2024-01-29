@@ -147,6 +147,15 @@ main {
 
     }
 
+    .displayNone{
+        display: none !important;
+    }
+
+    .placeSection{
+        align-self: flex-start;
+        margin-top: 3.8rem;
+    }
+
     .cardFoot{
         min-width: 300px;
         position: absolute;
@@ -162,7 +171,13 @@ main {
         align-items: center;
     }
 
+    .b-game-card {
+        overflow: hidden;
+    }
 
+    .l-container .card{
+        overflow: hidden;
+    }
 
 
 @media (width < 995px) {
@@ -177,7 +192,14 @@ main {
 
     .l-container{
         justify-content: center;
+        overflow: hidden;
     }
+
+    .placeSection{
+        margin-top: 0;
+    }
+
+   
 
 
 }
