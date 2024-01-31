@@ -36,11 +36,12 @@ export async function getUser(id) {
   const url = `http://localhost:3000/user/${id}`;
   const response = await fetch(url);
   const dato = response.json();
+  return await dato
 }
 
 export async function getMultipleUsers() {
   const url = `http://localhost:3000/user/`;
   const response = await fetch(url);
-  const dato = await response.json();
-  return await dato;
+  const datos = await response.json();
+  return await datos;
 }

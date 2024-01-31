@@ -11,7 +11,7 @@ const apellidosInput = document.querySelector("#examplelastname");
 const emailInput = document.querySelector("#exampleInputEmail1");
 const paswordInput = document.querySelector("#exampleInputPassword1");
 const paswordInput2 = document.querySelector("#exampleInputPassword2");
-const alerta = document.querySelector(".alerta");
+
 
 //EVENTOS
 btnEnviar.addEventListener("click", (event) => {
