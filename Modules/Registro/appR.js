@@ -1,6 +1,7 @@
 //SELECTORES
 
 import { postUser, getMultipleUsers } from "../CRUD_USUARIOS/users.js";
+import { avisos, clearDiv} from "../Alertas/alertas.js"
 
 const formulario = document.querySelector(".form");
 const btnEnviar = document.querySelector(".btn-btn-primary");
@@ -38,6 +39,7 @@ btnEnviar.addEventListener("click", (event) => {
     const regexCorreo = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const validacionCorreo = regexCorreo.test(registroUsuario.email);
     if (!validacionCorreo) {
+      emailInput.classList.add('is-invalid')
       avisos("Correo no valido", false);
     } else if (registroUsuario.contrasena !== registroUsuario.contrasena2) {
       avisos("Contraseñas no coinciden", false);
@@ -56,44 +58,7 @@ btnEnviar.addEventListener("click", (event) => {
   formulario.reset();
 });
 
-function avisos(texto, condicion) {
-  const alert = document.createElement(`div`);
-  const icono = document.createElement("i");
-  const alertTitulo = document.createElement("p");
-  const hr = document.createElement("hr");
-  alertTitulo.textContent = texto;
-  alert.classList.add("alert");
-  icono.classList.add("bx");
-  alert.setAttribute("role", "alert");
-  alertTitulo.classList.add("alert-heading");
 
-  if (condicion == true) {
-    alert.classList.add("alert-success");
-    icono.classList.add("bx-check-circle");
-    icono.classList.add("check");
-  } else {
-    alert.classList.add("alert-danger");
-    icono.classList.add("bx");
-    icono.classList.add("bx-x-circle");
-    icono.classList.add("check");
-  }
-
-  clearDiv();
-  alert.appendChild(icono);
-  alert.appendChild(alertTitulo);
-  alert.appendChild(hr);
-  alerta.appendChild(alert);
-
-  setTimeout(() => {
-    alert.style.display = "none";
-  }, 2000);
-}
-
-function clearDiv() {
-  while (alerta.firstChild) {
-    alerta.removeChild(alerta.firstChild);
-  }
-}
 
 let data2 = getMultipleUsers();
 

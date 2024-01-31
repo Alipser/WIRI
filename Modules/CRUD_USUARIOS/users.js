@@ -36,7 +36,7 @@ export async function getUser(id) {
   const url = `http://localhost:3000/user/${id}`;
   const response = await fetch(url);
   const dato = response.json();
-  return await dato
+  return await dato;
 }
 
 export async function getMultipleUsers() {
@@ -45,3 +45,15 @@ export async function getMultipleUsers() {
   const datos = await response.json();
   return await datos;
 }
+
+
+//Funcion que se llama en el login la intencion es obtener un usuario a partir de su id
+
+export async function getUsersbyEmail(email) {
+  //queryparam parametro de busqueda
+  console.log(`http://localhost:3000/user?email=${email}`);
+  const respuesta = await fetch(`http://localhost:3000/user?email=${email} `);
+  const data = await respuesta.json();
+  return data;
+}
+

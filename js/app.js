@@ -1,4 +1,5 @@
 import { avisos, clearDiv } from "../Modules/Alertas/alertas.js";
+import {getUsersbyEmail} from '../Modules/CRUD_USUARIOS/users.js'
 
 //SELECTORES<<
 const login = document.querySelector(".login");
@@ -23,9 +24,13 @@ btnLogin.addEventListener("click", async (event) => {
       console.log("existe el suario");
       console.log(password, dataUser[0].contrasena);
       if (password === dataUser[0].contrasena) {
-        console.log(
-          "Las constraseñas son iguales y  deberia redirigir al home"
-        );
+          localStorage.setItem('isAuth', 'true')
+          localStorage.setItem('dataUser', JSON.stringify(dataUser[0]))
+          setTimeout(()=>{
+            window.location.href='./Modules/SignedHome/signedHome.html'
+            console.log('paso el segundo')
+          } ,1000)
+        ;
       } else {
         avisos("La contraseña no coincide", false)
       }
@@ -39,10 +44,3 @@ btnLogin.addEventListener("click", async (event) => {
   }
 });
 
-async function getUsersbyEmail(email) {
-  //queryparam parametro de busqueda
-  console.log(`${url}?email=${email}`);
-  const respuesta = await fetch(`${url}?email=${email} `);
-  const data = await respuesta.json();
-  return data;
-}

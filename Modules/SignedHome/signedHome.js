@@ -1,7 +1,7 @@
 //nodos
 
-const listaTemas = document.querySelector('#nav > div > div.d-flex.gap-1.align-items-start > div:nth-child(2) > ul');
-const html = document.querySelector('html');
+const listaTemas = document.querySelector('#nav > div > div.d-flex.gap-1.align-items-start > div:nth-child(2) > ul')
+const html = document.querySelector('html')
 
 
 listaTemas.addEventListener('click', (evento) => {
