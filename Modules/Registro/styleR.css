@@ -15,19 +15,9 @@ body {
   align-items: center;
 }
 
-.alerta {
-  position: absolute;
-  z-index: 5;
-  font-size: 16px;
-}
 
-.alerta .check {
-  color: rgb(0, 0, 0);
-  font-size: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
+
 main {
   overflow: hidden;
   width: 100%;
@@ -60,8 +50,17 @@ main #fondo img {
   object-fit: cover;
 }
 
+.fondo .back i{
+  position: absolute;
+  
+}
+
 
 main .login {
+  background-color: #86838322;
+  border-radius: 10px;
+  box-shadow: 0 0 25px 10px rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(10px);
   z-index: 3;
   color: white;
   border: 1px solid white;
@@ -94,6 +93,8 @@ main #imagen {
 
 }
 
+
+
 @keyframes img {
   0% {
     bottom: 110%;
@@ -110,10 +111,10 @@ main #imagen {
 @media (width <= 992px){
   main .login{
     overflow: scroll;
-    height: 70vh;
+    height: 95vh;
   }
 
-  .alerta {
+  /* .alerta {
     width: 100vw;
     height: 100vh;
     z-index: 5;
@@ -121,7 +122,7 @@ main #imagen {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+  } */
 }
 
 
