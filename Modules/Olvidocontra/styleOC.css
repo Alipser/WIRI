@@ -15,19 +15,6 @@ body {
   align-items: center;
 }
 
-.alerta {
-  position: absolute;
-  z-index: 5;
-  font-size: 16px;
-}
-
-.alerta .check {
-  color: rgb(0, 0, 0);
-  font-size: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 main {
   overflow: hidden;
   width: 100%;

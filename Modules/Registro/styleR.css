@@ -15,9 +15,6 @@ body {
   align-items: center;
 }
 
-
-
-
 main {
   overflow: hidden;
   width: 100%;
@@ -50,11 +47,9 @@ main #fondo img {
   object-fit: cover;
 }
 
-.fondo .back i{
+.fondo .back i {
   position: absolute;
-  
 }
-
 
 main .login {
   background-color: #86838322;
@@ -73,7 +68,7 @@ main #imagen {
   height: 8rem;
 }
 
-.login_content .pieForm{
+.login_content .pieForm {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -87,13 +82,10 @@ main #imagen {
   color: white;
 }
 
-.login_content .pieForm img{
+.login_content .pieForm img {
   width: 80px;
- height: 30px;
-
+  height: 30px;
 }
-
-
 
 @keyframes img {
   0% {
@@ -105,13 +97,12 @@ main #imagen {
     top: 110%;
     bottom: -20%;
   }
-
 }
 
-@media (width <= 992px){
-  main .login{
+@media (width <= 992px) {
+  main .login {
     overflow: scroll;
-    height: 95vh;
+    height: 73vh;
   }
 
   /* .alerta {
@@ -124,7 +115,3 @@ main #imagen {
     align-items: center;
   } */
 }
-
-
-
-

@@ -1,52 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="styleOC.css">
-</head>
-<body>
-  <div class="alerta" >
-  </div>
-  <main >
-    <section class="login">
-      <div class="login_content">
-        <h2>Recuperar contraseña</h2>
-        <form class="form">
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Correo electronico" aria-describedby="emailHelp">
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" placeholder="Contraseña" id="exampleInputPassword1">
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputPassword2" class="form-label">Repetir contraseña</label>
-            <input type="password" class="form-control" placeholder="Repetir contraseña" id="exampleInputPassword2">
-          </div>
-          <div class="pieForm">
-            <button type="submit" class="btn-btn-primary">Enviar</button>
-            <img src="/media/WIRI__3_-removebg-preview (1).png" alt="">
-          </div> 
-        </form>
-      </div>
-    </section>
-    
 
-    <section id="fondo">
-      <img src="/media/astronave.png" alt="">
-      <video src="/media/video.mp4" loop autoplay muted></video>
-    </section>
-    
-  </main>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styleOC.css" />
+  </head>
+  <body>
+    <main>
+      <section class="login">
+        <div class="login_content">
+          <h2>Cambiar Contraseña</h2>
+          <form class="form">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                placeholder="Correo electronico"
+                aria-describedby="emailHelp"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"
+                >Contraseña</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Contraseña"
+                id="exampleInputPassword1"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword2" class="form-label"
+                >Repetir contraseña</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Repetir contraseña"
+                id="exampleInputPassword2"
+              />
+            </div>
+            <div class="pieForm">
+              <button type="submit" class="btn-btn-primary">Enviar</button>
+              <img src="/media/WIRI__3_-removebg-preview (1).png" alt="" />
+            </div>
+          </form>
 
-  
-    <script type="module" src="./Olvidocontra/appOC.js"></script>
-</body>
+          <div class="d-flex align-items-center justify-content-center">
+            <a
+              href="../../index.html"
+              style="cursor: pointer"
+              class="mt-3 pe-auto link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+            >
+              ¡Ya no quiero cambiarla!
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="fondo">
+        <img src="/media/astronave.png" alt="" />
+        <video src="/media/video.mp4" loop autoplay muted></video>
+      </section>
+    </main>
+
+    <script type="module" src="./appOC.js"></script>
+  </body>
 </html>
-
