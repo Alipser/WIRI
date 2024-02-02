@@ -3,14 +3,34 @@
 const listaTemas = document.querySelector('#nav > div > div.d-flex.gap-1.align-items-start > div:nth-child(2) > ul')
 const html = document.querySelector('html')
 
+//NODOS DEL MODAL
+const modalTitle = document.querySelector('.modal-title')
+const modalcontenido = document.querySelector('#modalContentText')
+const modalboton = document.querySelector('#exampleModal > div > div > div.modal-footer > button.btn.btn-primary')
+const closemodalboton = document.querySelector('#exampleModal > div > div > div.modal-footer > button.btn.btn-secondary')
 
+let citaReservar
 //EVENTOS
 
 window.addEventListener('DOMContentLoaded', () => {
   location.hash = 'Reservas'
   navigation()
 }, false);
+
 window.addEventListener('hashchange', navigation, false);
+
+modalboton.addEventListener('click',()=>{
+  const newAmountParticipant = Number(citaReservar.numberparticipant ?? 0 ) +1 
+  if (newAmountParticipant>6){
+   //aviso
+  }else{
+    pathClases(citaReservar.id, JSON.stringify({"numberparticipant":String(newAmountParticipant)}))
+    citaReservar = {}
+  }
+  closemodalboton.click()  
+  document.querySelector('body > main > div.l-container > section > div > div.card-header > ul > li:nth-child(1)> a').click()
+
+})
 
 //MODO OSCURO
 listaTemas.addEventListener('click', (evento) => {
@@ -29,7 +49,6 @@ listaTemas.addEventListener('click', (evento) => {
   }
 })
 
-
 //MODELS A MODELS
 async function getClases() {
   const url = 'http://localhost:3000/materias'
@@ -38,6 +57,14 @@ async function getClases() {
   return data
 }
 
+async function pathClases(id, objeto){
+  const url = `http://localhost:3000/citas/${id}`
+  const response  = await fetch(url, {
+    method: "PATCH",
+    body: objeto,
+    headers: { "Content-type": "application/json; charset=UTF-8" },
+  })
+}
 
 async function getProfesores(materia) {
   const url = `http://localhost:3000/profesores?materia=${materia}`
@@ -48,9 +75,14 @@ async function getProfesores(materia) {
   return data
 }
 
+async function getClaseConInfoProfe(idCita) {
+  const response = await fetch(`http://localhost:3000/citas/${idCita}/?_embed=profesore`)
+  const data = await response.json()
+  return data
+}
 
 async function getCitasPorProfesor(idprof) {
-  const url = `http://localhost:3000/citas?prof-id=${idprof}`
+  const url = `http://localhost:3000/citas?profesoreId=${idprof}`
   console.log(url)
   const response = await fetch(url)
   const data = await response.json()
@@ -82,44 +114,28 @@ function navigation() {
   }
 }
 
-
-
-
-
-
 function navToReservas(nameclase) {
-  location.hash = nameclase
+  location.hash = nameclase;
 }
 
-
 async function printCitas(nodoHTML, idprofesor) {
-  debugger
-
- 
-  let citas = await getCitasPorProfesor(idprofesor)
-  console.log(await citas)
-  crearNodoParaPintarCitas(nodoHTML)
-  const cardbodyContainer = document.querySelector('body > main > div > section > div > div.card-body')
-  ponerCitas('Lunes', citas, cardbodyContainer)
-  
-
-  const linklist = document.querySelector('body > main > div > section > div > div.card-header > ul').querySelectorAll('li')
+  let citas = await getCitasPorProfesor(idprofesor);
+  console.log(await citas);
+  crearNodoParaPintarCitas(nodoHTML);
+  const cardbodyContainer = document.querySelector('body > main > div > section > div > div.card-body');
+  ponerCitas('Lunes', citas, cardbodyContainer);
+  const linklist = document.querySelector('body > main > div > section > div > div.card-header > ul').querySelectorAll('li');
   linklist.forEach((listItem) => {
-    listItem.addEventListener('click', () => {
+    listItem.addEventListener('click', async() => {
       cardbodyContainer.innerHTML = ''
       linklist.forEach((link) => {
         link.querySelector('a').classList.remove('active')
       })
       listItem.querySelector('a').classList.add('active')
-      debugger
-      let citasPintar = Array(...citas)
+      let citasPintar = await getCitasPorProfesor(idprofesor)
       ponerCitas(listItem.textContent, citasPintar, cardbodyContainer)
     })
-
-  })
-
-  console.log(cardbodyContainer.querySelectorAll('a'))
-
+  });
 }
 
 function printClases(respuesta) {
@@ -267,21 +283,37 @@ function ponerCitas(dia, citas, nodo){
       citasPintar.forEach(cita => {
         
         nodo.innerHTML += `
-        <div class="card">
+        <div class="card" id=${cita.id}  prof-id=${cita.profesoreId}>
           <div class="card-body">
           <div class="d-flex align-items-center justify-content-between">
           <img width="45" height="15" src="../../assets/brand/wiriN.png">
           <div>
           <p>${cita.date}</p>
-          <p>${cita.hour??'Por definir'}</p>
+          <p>${cita.hour ?? 'Por definir'}</p>
           </div>
           
           </div>
-            <h5 class="card-title">${cita.title??`${decodeURI(location.hash).slice(1)}`}</h5>
-            <p class="card-text">${cita.numberparticipant > 0  && cita.numberparticipant <5 ? "Este espacio todavia puede ser reservado para tí": "El espacio esta lleno"}</p>
-            ${cita.numberparticipant > 0  && cita.numberparticipant < 5 ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>`: `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`}
+            <h5 class="card-title">${cita.title ?? `${decodeURI(location.hash).slice(1)}`}</h5>
+            <p class="card-text">${cita.numberparticipant > 0 && cita.numberparticipant < 5 ? "Este espacio todavia puede ser reservado para tí" : "El espacio esta lleno"}</p>
+            ${cita.numberparticipant > 0 && cita.numberparticipant < 5 ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>` : `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`}
           </div>
          </div>
         `
-      })
+
+          
+  })
+  nodo.querySelectorAll('.placeSection a').forEach((alinkConFormadeBoton) => {
+    alinkConFormadeBoton.addEventListener('click', async (evento) => {
+      console.log(evento.target.parentNode.parentElement.id)
+      const dataCita = await getClaseConInfoProfe(evento.target.parentNode.parentElement.id)
+      console.log(dataCita)
+      citaReservar = { ...dataCita }
+      modalTitle.textContent = `${decodeURI(location.hash).slice(1)}`
+      modalcontenido.innerHTML = `
+  <p> Estas a punto de reservan una cita con el  profesor ${dataCita.profesore.nombre} </p>
+  <p> Para el dia: ${dataCita.date} </p>
+  <p> A las ${dataCita.hour} <p>
+  `
+    })
+  })
 }
