@@ -172,6 +172,12 @@ main {
         overflow: hidden;
     }
 
+    body > main > div > section > div > div.card-body > div > div > div  p{
+        margin: 0;
+        justify-content: space-between;
+        font-size: 0.8rem;
+    }
+
     .l-container .card{
         overflow: hidden;
     }
