@@ -106,30 +106,17 @@ async function printCitas(nodoHTML, idprofesor) {
   linklist.forEach((listItem) => {
     listItem.addEventListener('click', () => {
       cardbodyContainer.innerHTML = ''
-      
       linklist.forEach((link) => {
         link.querySelector('a').classList.remove('active')
       })
       listItem.querySelector('a').classList.add('active')
       let citasPintar = Array(...citas)
-      console.log(listItem.textContent)
-      citasPintar = citasPintar.filter(cita => cita.day === listItem.textContent)
-      console.log(citasPintar)
-      citasPintar.forEach(cita => {
-        
-        cardbodyContainer.innerHTML += `
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-         </div>
-        `
-      })
+      ponerCitas(listItem.textContent, citasPintar, cardbodyContainer)
     })
 
   })
+
+  console.log(cardbodyContainer.querySelectorAll('a'))
 
 }
 
@@ -270,18 +257,28 @@ function crearNodoParaPintarCitas(nodoHTML) {
 }
 
 function ponerCitas(dia, citas, nodo){
+
+
   let citasPintar = Array(...citas)
       
-      citasPintar = citasPintar.filter(cita => cita.day === dia)
+      citasPintar = citasPintar.filter(cita => cita.day.includes(dia))
       console.log(citasPintar)
       citasPintar.forEach(cita => {
         
         nodo.innerHTML += `
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+          <div class="d-flex align-items-center justify-content-between">
+          <img width="45" height="15" src="../../assets/brand/wiriN.png">
+          <div>
+          <p>${cita.date}</p>
+          <p>${cita.hour??'Por definir'}</p>
+          </div>
+          
+          </div>
+            <h5 class="card-title">${cita.title??`${decodeURI(location.hash).slice(1)}`}</h5>
+            <p class="card-text">${cita.numberparticipant > 0  && cita.numberparticipant <5 ? "Este espacio todavia puede ser reservado para tí": "El espacio esta lleno"}</p>
+            ${cita.numberparticipant > 0  && cita.numberparticipant < 5 ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>`: `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`}
           </div>
          </div>
         `
