@@ -81,13 +81,20 @@ function pintarCitas(data){
         <div class="card" style="width: 18rem;">
         <img src="https://img.freepik.com/premium-vector/cute-astronaut-jumping-space-cartoon-vector-icon-illustration-science-technology-icon-isolated_138676-5751.jpg?size=338&ext=jpg" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title">Horario Generado</h5>
-          <p class="card-text">Clase: <span>${card.class} </span></p>
-          <p class="card-text">Fecha: <span></span>${card.date} </p>
-          <p class="card-text">Hora: <span></span>${card.duracion} </p>
-          <p class="card-text">Participantes: <span>${card.numberparticipant} </span></p>
-
-          <a href="${card.link} " class="btn btn-primary">Ir a la reunion</a>
+          <h5 data-i18n="tituloCard" class="translate  card-title">Horario Generado</h5>
+          <div class="d-flex">
+          <p  data-i18n="classCard" class="translate card-text">Clase: </p> <span> ${card.class} </span>
+          </div>
+          <div class="d-flex">
+          <p  data-i18n="dateCard" class="translate card-text">Fecha:</p>  <span> ${card.date} </span>
+          </div>
+          <div class="d-flex">
+          <p  data-i18n="timeCard" class="translate card-text">Hora: </p> <span> ${card.duracion} </span>
+          </div>
+          <div class="d-flex"> 
+          <p  data-i18n="participantesCard" class="translate card-text">Participantes:</p> <span>${card.numberparticipant} </span>
+          </div>
+          <a href="${card.link} " class="btn btn-primary"></a><span> Ir a la reunion </span>
         </div>`
     })
 }

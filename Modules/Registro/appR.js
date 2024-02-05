@@ -31,7 +31,7 @@ emailInput.addEventListener("blur", () => {
 });
 
 paswordInput2.addEventListener("blur", () => {
-  debugger;
+  
   if (alertContraExist) {
     const passAreTheSame = paswordInput2.value === paswordInput.value;
     const pass2Isvalid = regexPassword.test(paswordInput2.value);
