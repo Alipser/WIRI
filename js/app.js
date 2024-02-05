@@ -1,5 +1,5 @@
 import { avisos, clearDiv } from "../Modules/Alertas/alertas.js";
-import {getUsersbyEmail} from '../Modules/CRUD_USUARIOS/users.js'
+import { getUsersbyEmail } from "../Modules/CRUD_USUARIOS/users.js";
 
 //SELECTORES<<
 const login = document.querySelector(".login");
@@ -24,23 +24,24 @@ btnLogin.addEventListener("click", async (event) => {
       console.log("existe el suario");
       console.log(password, dataUser[0].contrasena);
       if (password === dataUser[0].contrasena) {
-          localStorage.setItem('isAuth', 'true')
-          localStorage.setItem('dataUser', JSON.stringify(dataUser[0]))
-          setTimeout(()=>{
-            window.location.href='./Modules/SignedHome/signedHome.html'
-            console.log('paso el segundo')
-          } ,1000)
-        ;
+        localStorage.setItem("isAuth", "true");
+        localStorage.setItem("dataUser", JSON.stringify(dataUser[0]));
+        setTimeout(() => {
+          const extisProfIDinUSER = dataUser[0].profesoreId;
+          if (extisProfIDinUSER) {
+            window.location.href =
+              "http://127.0.0.1:5500/Modules/Citas/indexCitas.html";
+          } else {
+            window.location.href = "./Modules/SignedHome/signedHome.html";
+          }
+        }, 1000);
       } else {
-        avisos("La contraseña no coincide", false)
+        avisos("La contraseña no coincide", false);
       }
     } else {
-      console.log(
-        avisos("El usuario no existe",false)
-      );
+      console.log(avisos("El usuario no existe", false));
     }
   } else {
     avisos("El correo no es valido", false);
   }
 });
-
