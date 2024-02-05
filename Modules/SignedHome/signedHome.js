@@ -6,6 +6,7 @@ const listaTemas = document.querySelector(
   "#nav > div > div.d-flex.gap-1.align-items-start > div:nth-child(2) > ul"
 );
 const html = document.querySelector("html");
+const containerPadre = document.querySelector(".l-container");
 
 //NODOS DEL MODAL
 const modalTitle = document.querySelector(".modal-title");
@@ -36,16 +37,21 @@ modalboton.addEventListener("click", () => {
   const usuarioDatastr = localStorage.getItem("dataUser");
   const usuarioDataparse = JSON.parse(usuarioDatastr);
   const isinCita = citaReservar.users.includes(usuarioDataparse.id);
+  const tieneEspacioCita = usuarioDataparse.citas ?? true;
 
   if (!isinCita) {
     citaReservar.users.push(usuarioDataparse.id);
-    const newAmountParticipant = Number(citaReservar.numberparticipant ?? 0) + 1;
+    const newAmountParticipant =
+      Number(citaReservar.numberparticipant ?? 0) + 1;
     if (newAmountParticipant >= 6) {
       avisos("La sala actualmente se encuentra llena ", false);
     } else {
       pathClases(
         citaReservar.id,
-        JSON.stringify({ numberparticipant: String(newAmountParticipant), users: citaReservar.users })
+        JSON.stringify({
+          numberparticipant: String(newAmountParticipant),
+          users: citaReservar.users,
+        })
       );
       citaReservar = {};
     }
@@ -55,11 +61,11 @@ modalboton.addEventListener("click", () => {
         "body > main > div.l-container > section > div > div.card-header > ul > li:nth-child(1)> a"
       )
       .click();
-  }else{
-    closemodalboton.click()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    avisos('Ya estas agendado para esta Reunión', false)
-    citaReservar = {}
+  } else {
+    closemodalboton.click();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    avisos("Ya estas agendado para esta Reunión", false);
+    citaReservar = {};
   }
 });
 
@@ -128,15 +134,38 @@ async function getCitasPorProfesor(idprof) {
   return data;
 }
 
+async function getTodaslasCitasConProfesores(userid = 'f406') {
+  const url = "http://localhost:3000/citas?_embed=profesore"
+  const response = await fetch(url)
+  const respuesta = await response.json()
+  console.log(respuesta)
+  console.log(userid)
+  const respuestfiltradaIdUsuario = respuesta.filter(cita => cita.users.includes(userid))
+  console.log(respuestfiltradaIdUsuario)
+  return respuestfiltradaIdUsuario
+}
+
 //---------------------------//
 
 //NAVEGACION EN MODULO SIGNED HOME
-function navigation() {
+async function navigation() {
   if (location.hash.startsWith("#Reservas")) {
     getClases().then((response) => {
       printClases(response);
     });
-  } else {
+  } else if (location.hash.startsWith("#Agenda")) {
+    pintarCitasAgendadas();
+  } else if (location.hash.startsWith("#Cancelar")) {
+    await pintarCitasAgendadas();
+    const botones = containerPadre.querySelectorAll('a')
+    botones.forEach(() => {
+      botones.textContent = 'cancelar'
+    })
+    console.log(botones)
+
+
+  }
+  else {
     let urlSearch = decodeURI(location.hash.slice(1)).replace(" ", "-");
     console.log(urlSearch);
     document.querySelector(".l-container").innerHTML = "";
@@ -340,19 +369,16 @@ function ponerCitas(dia, citas, nodo) {
           </div>
           
           </div>
-            <h5 class="card-title">${
-              cita.title ?? `${decodeURI(location.hash).slice(1)}`
-            }</h5>
-            <p class="card-text">${
-              cita.numberparticipant >= 0 && cita.numberparticipant < 5
-                ? "Este espacio todavia puede ser reservado para tí"
-                : "El espacio esta lleno"
-            }</p>
-            ${
-              cita.numberparticipant >= 0 && cita.numberparticipant < 5
-                ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>`
-                : `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`
-            }
+            <h5 class="card-title">${cita.title ?? `${decodeURI(location.hash).slice(1)}`
+      }</h5>
+            <p class="card-text">${cita.numberparticipant >= 0 && cita.numberparticipant < 5
+        ? "Este espacio todavia puede ser reservado para tí"
+        : "El espacio esta lleno"
+      }</p>
+            ${cita.numberparticipant >= 0 && cita.numberparticipant < 5
+        ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>`
+        : `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`
+      }
           </div>
          </div>
         `;
@@ -374,3 +400,87 @@ function ponerCitas(dia, citas, nodo) {
     });
   });
 }
+
+async function pintarCitasAgendadas() {
+  containerPadre.innerHTML = "";
+  const datauser = JSON.parse(localStorage.getItem('dataUser'))
+  const citasAgendasporUsuario = await getTodaslasCitasConProfesores(datauser.id)
+  console.log(citasAgendasporUsuario)
+
+  citasAgendasporUsuario.forEach(cita => {
+    const placeSection2 = document.createElement("div");
+    placeSection2.classList.add("cardClass");
+    placeSection2.id = cita.id
+
+    const divContenedorArriba = document.createElement('div')
+    divContenedorArriba.classList.add('parteSuperiorCard')
+
+    const divContenedorAbajo = document.createElement('div')
+    divContenedorAbajo.classList.add('parteInferiorCard')
+    divContenedorAbajo.classList.add('d-flex')
+
+
+    const citaTitle = document.createElement('h5')
+    citaTitle.textContent = `Asesoria de ${cita.profesore.materia.replaceAll('-', ' ').toLowerCase()}`
+    citaTitle.classList.add('cardtitulo')
+
+    const citafecha = document.createElement('p')
+    citafecha.textContent = cita.date
+
+    const citadia = document.createElement('p')
+    citadia.textContent = cita.day.split('-')[0]
+
+
+
+    const circle = document.createElement('img')
+    circle.src = cita.profesore.img
+    circle.classList.add('circle')
+
+    const divDerechadeLaImagen = document.createElement('div')
+    divDerechadeLaImagen.classList.add('gafeteParteInferior')
+    const nombreProfe = document.createElement('p')
+    const leyendaprofe = document.createElement('p')
+
+    nombreProfe.textContent = cita.profesore.nombre
+    leyendaprofe.textContent = cita.profesore.cargo ? cita.profesore.cargo : 'Tutor-wiri'
+
+
+    const linkElement = document.createElement('a');
+    linkElement.className = 'btn btn-primary';
+    linkElement.href = `https://meet.jit.si/${cita.id}`;
+    linkElement.textContent = 'Asiste a la cita';
+    linkElement.target = "_blank"
+
+
+    const botonCentralCard = document.createElement('button')
+    botonCentralCard.classList.add('btn')
+    botonCentralCard.classList.add('btn-secondary')
+
+
+
+
+    //ZONA ARMADO PARTE SUPERIOR
+    divContenedorArriba.appendChild(citaTitle)
+    divContenedorArriba.appendChild(citafecha)
+    divContenedorArriba.appendChild(citadia)
+
+    //Zona Armado PARTE INFERIOR
+    divContenedorAbajo.appendChild(circle)
+    divDerechadeLaImagen.appendChild(nombreProfe)
+    divDerechadeLaImagen.appendChild(leyendaprofe)
+    divContenedorAbajo.appendChild(divDerechadeLaImagen)
+
+    //FIN DEL ARMAADO
+    placeSection2.appendChild(divContenedorArriba)
+    placeSection2.appendChild(linkElement)
+    placeSection2.appendChild(divContenedorAbajo)
+
+    containerPadre.appendChild(placeSection2)
+
+  })
+
+  console.log(localStorage)
+
+}
+
+
