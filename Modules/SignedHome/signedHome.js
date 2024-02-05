@@ -1,14 +1,32 @@
 import { avisos, clearDiv } from "../Alertas/alertas.js";
+import { getProfesores } from "../../models/profesores/profesores.js";
+import {
+  getClases,
+  pathClases,
+  getClaseConInfoProfe,
+  getCitasPorProfesor,
+  getTodaslasCitasConProfesores
+} from "../../models/citas/citas.js";
+
+//VAR GLOBALES
+let citaReservar;
+
 
 //nodos
-
 const listaTemas = document.querySelector(
   "#nav > div > div.d-flex.gap-1.align-items-start > div:nth-child(2) > ul"
 );
 const html = document.querySelector("html");
 const containerPadre = document.querySelector(".l-container");
 
-//NODOS DEL MODAL
+//______________________________________________________________
+//MODAL USUARIO
+
+const usernamenodo = document.querySelector('#offcanvasRightLabel')
+usernamenodo.textContent= JSON.parse(localStorage.getItem("dataUser")).nombre
+
+//___________________________________________________________//
+//NODOS DEL MODAL Agendar
 const modalTitle = document.querySelector(".modal-title");
 const modalcontenido = document.querySelector("#modalContentText");
 const modalboton = document.querySelector(
@@ -18,7 +36,33 @@ const closemodalboton = document.querySelector(
   "#exampleModal > div > div > div.modal-footer > button.btn.btn-secondary"
 );
 
-let citaReservar;
+//_________________________________________________________//
+//NODOS DEL MODAL Cancelar
+const modalbotonCancel = document.querySelector(
+  "#cancelModal > div > div > div.modal-footer > button.btn.btn-primary"
+);
+modalbotonCancel.addEventListener("click", async () => {
+  const datauser = JSON.parse(localStorage.getItem("dataUser"));
+  console.log(citaReservar.users, datauser.id, citaReservar.id);
+  citaReservar.users = await citaReservar.users.filter(
+    (asistente) => asistente !== datauser.id
+  );
+  console.log(citaReservar, "despues del filtrado", citaReservar.id);
+  await pathClases(citaReservar.id, JSON.stringify({ users: citaReservar.users }));
+  citaReservar = {};
+  document
+    .querySelector(
+      "#cancelModal > div > div > div.modal-footer > button.btn.btn-secondary"
+    )
+    .click();
+  containerPadre.innerHTML=''
+  pintarCitasAgendadas();
+});
+//____________________________________________________________//
+
+
+
+
 //EVENTOS
 
 window.addEventListener(
@@ -91,62 +135,6 @@ listaTemas.addEventListener("click", (evento) => {
   }
 });
 
-//MODELS A MODELS
-async function getClases() {
-  const url = "http://localhost:3000/materias";
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
-}
-
-async function pathClases(id, objeto) {
-  const url = `http://localhost:3000/citas/${id}`;
-  const response = await fetch(url, {
-    method: "PATCH",
-    body: objeto,
-    headers: { "Content-type": "application/json; charset=UTF-8" },
-  });
-}
-
-async function getProfesores(materia) {
-  const url = `http://localhost:3000/profesores?materia=${materia}`;
-  console.log(url);
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log(data);
-  return data;
-}
-
-async function getClaseConInfoProfe(idCita) {
-  const response = await fetch(
-    `http://localhost:3000/citas/${idCita}/?_embed=profesore`
-  );
-  const data = await response.json();
-  return data;
-}
-
-async function getCitasPorProfesor(idprof) {
-  const url = `http://localhost:3000/citas?profesoreId=${idprof}`;
-  console.log(url);
-  const response = await fetch(url);
-  const data = await response.json();
-  console.log(data);
-  return data;
-}
-
-async function getTodaslasCitasConProfesores(userid = 'f406') {
-  const url = "http://localhost:3000/citas?_embed=profesore"
-  const response = await fetch(url)
-  const respuesta = await response.json()
-  console.log(respuesta)
-  console.log(userid)
-  const respuestfiltradaIdUsuario = respuesta.filter(cita => cita.users.includes(userid))
-  console.log(respuestfiltradaIdUsuario)
-  return respuestfiltradaIdUsuario
-}
-
-//---------------------------//
-
 //NAVEGACION EN MODULO SIGNED HOME
 async function navigation() {
   if (location.hash.startsWith("#Reservas")) {
@@ -157,15 +145,12 @@ async function navigation() {
     pintarCitasAgendadas();
   } else if (location.hash.startsWith("#Cancelar")) {
     await pintarCitasAgendadas();
-    const botones = containerPadre.querySelectorAll('a')
+    const botones = containerPadre.querySelectorAll("a");
     botones.forEach(() => {
-      botones.textContent = 'cancelar'
-    })
-    console.log(botones)
-
-
-  }
-  else {
+      botones.textContent = "cancelar";
+    });
+    console.log(botones);
+  } else {
     let urlSearch = decodeURI(location.hash.slice(1)).replace(" ", "-");
     console.log(urlSearch);
     document.querySelector(".l-container").innerHTML = "";
@@ -369,16 +354,19 @@ function ponerCitas(dia, citas, nodo) {
           </div>
           
           </div>
-            <h5 class="card-title">${cita.title ?? `${decodeURI(location.hash).slice(1)}`
-      }</h5>
-            <p class="card-text">${cita.numberparticipant >= 0 && cita.numberparticipant < 5
-        ? "Este espacio todavia puede ser reservado para tí"
-        : "El espacio esta lleno"
-      }</p>
-            ${cita.numberparticipant >= 0 && cita.numberparticipant < 5
-        ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>`
-        : `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`
-      }
+            <h5 class="card-title">${
+              cita.title ?? `${decodeURI(location.hash).slice(1)}`
+            }</h5>
+            <p class="card-text">${
+              cita.numberparticipant >= 0 && cita.numberparticipant < 5
+                ? "Este espacio todavia puede ser reservado para tí"
+                : "El espacio esta lleno"
+            }</p>
+            ${
+              cita.numberparticipant >= 0 && cita.numberparticipant < 5
+                ? `<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"">Reservar Cita</a>`
+                : `<h5 class="card-title"> ${cita.numberparticipant}/5 Participantes en la sala</h5>`
+            }
           </div>
          </div>
         `;
@@ -403,84 +391,85 @@ function ponerCitas(dia, citas, nodo) {
 
 async function pintarCitasAgendadas() {
   containerPadre.innerHTML = "";
-  const datauser = JSON.parse(localStorage.getItem('dataUser'))
-  const citasAgendasporUsuario = await getTodaslasCitasConProfesores(datauser.id)
-  console.log(citasAgendasporUsuario)
+  const datauser = JSON.parse(localStorage.getItem("dataUser"));
+  const citasAgendasporUsuario = await getTodaslasCitasConProfesores(
+    datauser.id
+  );
+  console.log(citasAgendasporUsuario);
 
-  citasAgendasporUsuario.forEach(cita => {
+  citasAgendasporUsuario.forEach((cita) => {
     const placeSection2 = document.createElement("div");
     placeSection2.classList.add("cardClass");
-    placeSection2.id = cita.id
+    placeSection2.id = cita.id;
 
-    const divContenedorArriba = document.createElement('div')
-    divContenedorArriba.classList.add('parteSuperiorCard')
+    const divContenedorArriba = document.createElement("div");
+    divContenedorArriba.classList.add("parteSuperiorCard");
 
-    const divContenedorAbajo = document.createElement('div')
-    divContenedorAbajo.classList.add('parteInferiorCard')
-    divContenedorAbajo.classList.add('d-flex')
+    const divContenedorAbajo = document.createElement("div");
+    divContenedorAbajo.classList.add("parteInferiorCard");
+    divContenedorAbajo.classList.add("d-flex");
 
+    const citaTitle = document.createElement("h5");
+    citaTitle.textContent = `Asesoria de ${cita.profesore.materia
+      .replaceAll("-", " ")
+      .toLowerCase()}`;
+    citaTitle.classList.add("cardtitulo");
 
-    const citaTitle = document.createElement('h5')
-    citaTitle.textContent = `Asesoria de ${cita.profesore.materia.replaceAll('-', ' ').toLowerCase()}`
-    citaTitle.classList.add('cardtitulo')
+    const citafecha = document.createElement("p");
+    citafecha.textContent = cita.date;
 
-    const citafecha = document.createElement('p')
-    citafecha.textContent = cita.date
+    const citadia = document.createElement("p");
+    citadia.textContent = cita.day.split("-")[0];
 
-    const citadia = document.createElement('p')
-    citadia.textContent = cita.day.split('-')[0]
+    const circle = document.createElement("img");
+    circle.src = cita.profesore.img;
+    circle.classList.add("circle");
 
+    const divDerechadeLaImagen = document.createElement("div");
+    divDerechadeLaImagen.classList.add("gafeteParteInferior");
+    const nombreProfe = document.createElement("p");
+    const leyendaprofe = document.createElement("p");
 
-
-    const circle = document.createElement('img')
-    circle.src = cita.profesore.img
-    circle.classList.add('circle')
-
-    const divDerechadeLaImagen = document.createElement('div')
-    divDerechadeLaImagen.classList.add('gafeteParteInferior')
-    const nombreProfe = document.createElement('p')
-    const leyendaprofe = document.createElement('p')
-
-    nombreProfe.textContent = cita.profesore.nombre
-    leyendaprofe.textContent = cita.profesore.cargo ? cita.profesore.cargo : 'Tutor-wiri'
-
-
-    const linkElement = document.createElement('a');
-    linkElement.className = 'btn btn-primary';
-    linkElement.href = `https://meet.jit.si/${cita.id}`;
-    linkElement.textContent = 'Asiste a la cita';
-    linkElement.target = "_blank"
-
-
-    const botonCentralCard = document.createElement('button')
-    botonCentralCard.classList.add('btn')
-    botonCentralCard.classList.add('btn-secondary')
-
-
-
+    nombreProfe.textContent = cita.profesore.nombre;
+    leyendaprofe.textContent = cita.profesore.cargo
+      ? cita.profesore.cargo
+      : "Tutor-wiri";
 
     //ZONA ARMADO PARTE SUPERIOR
-    divContenedorArriba.appendChild(citaTitle)
-    divContenedorArriba.appendChild(citafecha)
-    divContenedorArriba.appendChild(citadia)
+    divContenedorArriba.appendChild(citaTitle);
+    divContenedorArriba.appendChild(citafecha);
+    divContenedorArriba.appendChild(citadia);
 
     //Zona Armado PARTE INFERIOR
-    divContenedorAbajo.appendChild(circle)
-    divDerechadeLaImagen.appendChild(nombreProfe)
-    divDerechadeLaImagen.appendChild(leyendaprofe)
-    divContenedorAbajo.appendChild(divDerechadeLaImagen)
+    divContenedorAbajo.appendChild(circle);
+    divDerechadeLaImagen.appendChild(nombreProfe);
+    divDerechadeLaImagen.appendChild(leyendaprofe);
+    divContenedorAbajo.appendChild(divDerechadeLaImagen);
 
     //FIN DEL ARMAADO
-    placeSection2.appendChild(divContenedorArriba)
-    placeSection2.appendChild(linkElement)
-    placeSection2.appendChild(divContenedorAbajo)
+    placeSection2.appendChild(divContenedorArriba);
+    const linkElement = document.createElement("a");
+    linkElement.className = "btn btn-primary";
+    if (location.hash.startsWith("#Agenda")) {
+      linkElement.href = `https://meet.jit.si/${cita.id}`;
+      linkElement.textContent = "Asiste a la cita";
+      linkElement.target = "_blank";
+    } else if (location.hash.startsWith("#Cancelar")) {
+      linkElement.textContent = "Cancelar cita";
+      linkElement.setAttribute("cita-id", cita.id);
+      linkElement.setAttribute("data-bs-target", "#cancelModal");
+      linkElement.setAttribute("data-bs-toggle", "modal");
+      linkElement.type = "button";
+      linkElement.addEventListener("click", async () => {
+        citaReservar = await getClaseConInfoProfe(cita.id);
+        console.log(citaReservar);
+      });
+    }
+    placeSection2.appendChild(linkElement);
+    placeSection2.appendChild(divContenedorAbajo);
 
-    containerPadre.appendChild(placeSection2)
+    containerPadre.appendChild(placeSection2);
+  });
 
-  })
-
-  console.log(localStorage)
-
+  console.log(localStorage);
 }
-
-
