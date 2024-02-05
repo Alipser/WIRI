@@ -22,8 +22,21 @@ const containerPadre = document.querySelector(".l-container");
 //______________________________________________________________
 //MODAL USUARIO
 
+const datlibre = JSON.parse(localStorage.getItem("dataUser"))
+console.log(datlibre)
+
 const usernamenodo = document.querySelector('#offcanvasRightLabel')
-usernamenodo.textContent= JSON.parse(localStorage.getItem("dataUser")).nombre
+const nombreApellido = document.querySelector('#offcanvasRight > div.offcanvas-body > div > div > h5')
+
+usernamenodo.textContent = datlibre.nombre
+nombreApellido.textContent= datlibre.nombre + " " + datlibre.apellido
+
+const logOut = document.querySelector('#offcanvasRight > div.offcanvas-body > div > button')
+logOut.addEventListener('click', ()=>{
+  debugger
+  localStorage.clear()
+  window.location.href='http://127.0.0.1:5500/index.html'
+})
 
 //___________________________________________________________//
 //NODOS DEL MODAL Agendar
