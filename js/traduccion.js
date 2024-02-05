@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
             dateCard:"Date:",
             timeCard:"Schedule:",
             participantesCard:"Participants:",
+            btnir:"Go to meeting"
 
           },
         },
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
             dateCard:"Fecha:",
             timeCard:"Hoarario:",
             participantesCard:"Participnates:",
+            btnir:"Ir a la reunión"
             
             
 

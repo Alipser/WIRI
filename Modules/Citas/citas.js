@@ -94,7 +94,7 @@ function pintarCitas(data){
           <div class="d-flex"> 
           <p  data-i18n="participantesCard" class="translate card-text">Participantes:</p> <span>${card.numberparticipant} </span>
           </div>
-          <a href="${card.link} " class="btn btn-primary"></a><span> Ir a la reunion </span>
+          <a href="${card.link}" data-i18n="btnir" class="translate btn btn-primary">Ir a la reunion</a>
         </div>`
     })
 }
